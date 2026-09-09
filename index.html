@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Quote Generator</title>
+</head>
+
+<body>
+
+    <h1>Random Quote Generator</h1>
+
+    <p id="quote">Click New Quote</p>
+
+    <button id="newQuote">New Quote</button>
+
+    <button id="copyQuote">Copy</button>
+
+    <button id="shareQuote">Share</button>
+
+
+    <script>
+        const button = document.getElementById("newQuote");
+        const quote = document.getElementById("quote");
+
+        // New Quote
+        button.onclick = async function() {
+
+            quote.innerText = "Loading...";
+
+            try {
+                const response = await fetch(
+                    "https://dummyjson.com/quotes/random"
+                );
+
+                const data = await response.json();
+
+                quote.innerText = data.quote;
+            }
+
+            catch (error) {
+                quote.innerText = "Something went wrong";
+            }
+        };
+
+
+        // Copy Quote
+        document.getElementById("copyQuote").onclick = function() {
+
+            navigator.clipboard.writeText(quote.innerText);
+
+            alert("Quote copied!");
+        };
+
+
+        // Share Quote
+        document.getElementById("shareQuote").onclick = function() {
+
+            if (navigator.share) {
+
+                navigator.share({
+                    title: "Random Quote",
+                    text: quote.innerText
+                });
+
+            } else {
+
+                // WhatsApp fallback
+                const whatsapp =
+                    "https://wa.me/?text=" +
+                    encodeURIComponent(quote.innerText);
+
+                window.open(whatsapp, "_blank");
+            }
+        };
+
+    </script>
+
+</body>
+</html>
